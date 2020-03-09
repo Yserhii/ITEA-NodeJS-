@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+	<meta charset = "UTF-8">
+	<meta name = "viewport" content = "width=device-width, initial-scale=1.0">
+	<meta http-equiv = "X-UA-Compatible" content="ie=edge">
+	<title>yserhii lib math</title>
+	<script>
+		window.onload = function () {
+
+			const inputArrNum = document.getElementById("inputArrNum");
+			const findMinNumButtom = document.getElementById("findMinNumButtom");
+			const res = document.getElementById("res");
+			const findMinNum = function () {
+
+				res.innerText = "";
+				if (!inputArrNum.value) return;
+				const xhr = new XMLHttpRequest();
+				xhr.open("POST", "/array_numbers/min_num");
+				xhr.onload = function () {
+					res.innerHTML = this.responseText;
+				};
+				xhr.onerror = (err) => console.log(err);
+				xhr.send(inputArrNum.value);
+			};
+
+			const findAllFileButtom = document.getElementById("findAllFileButtom");
+			const showFile = document.getElementById("showFile");
+
+			const showAllFile = function () {
+
+				const xhr = new XMLHttpRequest();
+				xhr.open("POST", "/files");
+				xhr.onload = function () {
+					const data = JSON.parse(this.responseText);
+					let result = '';
+					if (data && data.length) {
+						data.forEach((i) => result += `${i}\r\n`)
+					}
+					showFile.innerHTML = result;
+					treeSubmit.remove();
+				}
+				xhr.onerror = (err) => console.log(err);
+				xhr.send();
+			};
+
+			findMinNumButtom.addEventListener("click", findMinNum);
+			findAllFileButtom.addEventListener("click", showAllFile);
+		}
+	</script>
+</head>
+<body>
+	<h1>Поиски минимального числа</h1>
+	<form>
+		<input id = "inputArrNum">
+		<button type = "button" id = "findMinNumButtom">Найти</button>
+		<p>Результат:
+			<mark id = "res"></mark>
+		</p>
+	</form>
+	<br><br><br>
+	<form>
+		<h1>Список всех файлов</h1>
+		<button type = "button" id = "findAllFileButtom">Показать файлы</button>
+		<pre id="showFile"></pre>
+	</form>
+</body>
+</html>
